@@ -1,0 +1,61 @@
+.observablehq {
+	position: relative;
+}
+
+body {
+	margin: 0 15%;
+	font-family: "Iowan Old Style","Apple Garamond",Baskerville,"Palatino Linotype","Times New Roman","Droid Serif",Times,"Source Serif Pro",serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+h1 {
+	color: #333;
+	font-family: -apple-system,BlinkMacSystemFont,"avenir next",avenir,helvetica,"helvetica neue",ubuntu,roboto,noto,"segoe ui",arial,sans-serif;
+}
+
+.visualization { 
+	position: relative;
+}
+
+.domain { display: none }
+  
+input[type=number] { 
+	-webkit-appearance: textfield; 
+	-moz-appearance: textfield; 
+	appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none; 
+}
+  
+.alternative-impact-div { 
+	position: absolute;
+	display: flex;
+}
+.alternative-impact-div * {
+	box-sizing: border-box; 
+	border: none; 
+}
+.alternative-impact-div input:focus { 
+	outline: none; 
+}
+.alternative-impact-button { 
+	font: 20px sans-serif; 
+}
+.alternative-impact { 
+	text-align: center; 
+}
+  
+.criteria-weight { 
+	position: absolute; 
+}
+.criteria-weight * { 
+	box-sizing: border-box; 
+	border: 1px lightgray solid; 
+	background-color: #F8F8F8; 
+}
+.criteria-weight input:focus { 
+	outline: none; 
+}
+.criteria-weight-input { 
+	text-align: center; 
+}

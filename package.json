@@ -1,0 +1,9 @@
+{
+  "name": "palo-alto-rail-crossing-alternatives",
+  "main": "palo-alto-rail-crossing-alternatives/visualization.js",
+  "version": "0.1.0",
+  "author": {
+    "name": "Megan Kanne",
+    "url": "https://observablehq.com/@megankanne"
+  }
+}
