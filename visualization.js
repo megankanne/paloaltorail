@@ -2,11 +2,11 @@
  * Setup
  */
 
-import { color, legendX, textColor, xAxis, xPromise, yAxis, yPromise } from "./scales.js";
+import { color, legendX, textColor, xPromise, yPromise } from "./scales.js";
 
 import { criteriaPromise } from "./data.js";
 
-import { criteriaWidth, initialImpactRange, legend, margin, width } from "./constants.js";
+import { initialImpactRange, legend, margin, row, width } from "./constants.js";
 
 import { getAlternativesRanking, getHeight, reRankAlternatives, updateColumnOrder } from "./methods.js";
 
@@ -24,14 +24,57 @@ Promise
      */
 
     const body = d3.select(".visualization");
+
+    // X-Axis
+    const gx = body
+      .append("div")
+      .classed("x-axis", true)
+      .style("top", `${margin.top}px`);
+    const xTicks = gx
+        .selectAll(".x-tick")
+      .data(Object.entries(alternativeRank))
+      .join("div")
+        .classed("x-tick", true)
+        .style("width", `${x.bandwidth()}px`)
+        .style("left", d => `${x(d[0]) + margin.left}px`);
+    const xAlternativeName = xTicks
+        .append("p")
+        .classed("x-tick-name", true)
+        .text(d => d[0]);
+    const xAlternativeValue = xTicks
+        .append("p")
+        .classed("x-tick-value", true)
+        .text(d => d[1]);
+
+    // Y-Axis
+    const gy = body
+      .append("div")
+      .classed("y-axis", true);
+    const yTicks = gy
+        .selectAll(".y-tick")
+      .data(criteria)
+      .enter().append("p")
+        .classed("y-tick", true)
+        .style("left", `${margin.left*7/8}px`)
+        .style("top", d => `${y(d.name)}px`)
+        .text(d => d.name);
       
-      // Weight inputs
+    // Labels
     const weightsLabel = body
       .append("p")
         .text("Priority")
-        .attr("style", d => `position:absolute; top:${margin.top-40}px;`)
+        .style("top", `${margin.top-40}px`)
         .style("position", "absolute")
         .style("font", "14px sans-serif")
+    const criteriaLabel = body
+      .append("p")
+        .text("Criteria")
+        .style("top", `${margin.top-40}px`)
+        .style("left", `${margin.left*7/8}px`)
+        .style("position", "absolute")
+        .style("font", "14px sans-serif");
+
+    // Weight inputs
     const criteriaWeights = body
         .selectAll(".criteria-weight")
       .data(criteria)
@@ -66,9 +109,8 @@ Promise
           reRankAlternatives(criteria, alternativeRank);
           // update the order in the x-scale
           x.domain(Object.keys(alternativeRank).sort((a, b) => alternativeRank[a] - alternativeRank[b]));  
-
           // move the columns and the x axis to match
-          updateColumnOrder(impactInputs, gx, x, xAxis, alternativeRank);
+          updateColumnOrder(impactInputs, xTicks, x, xAlternativeValue, alternativeRank);
         });
     const priorityIncrementButton = criteriaWeights
         .append("input")
@@ -89,7 +131,6 @@ Promise
       .data(criteria)
       .enter().append("div")
         .classed("alternative-impact-group", true)
-        .style("position", "absolute")
         .style("top", d => `${y(d.name)}px`);
 
     const impactInputs = impactInputsGroup
@@ -141,9 +182,8 @@ Promise
               reRankAlternatives(criteria, alternativeRank);
               // update the order in the x-scale
               x.domain(Object.keys(alternativeRank).sort((a, b) => alternativeRank[a] - alternativeRank[b]));
-
               // move the columns and the x axis to match
-              updateColumnOrder(impactInputs, gx, x, xAxis, alternativeRank);
+              updateColumnOrder(impactInputs, xTicks, x, xAlternativeValue, alternativeRank);
             });
 
     const impactIncrementButton = impactInputs
@@ -161,18 +201,17 @@ Promise
             number.dispatchEvent(new Event('change')); 
           });
 
-    const svg = body.append("svg:svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    // Criteria rows
-    const criteriaRows = svg
+    // Criteria Rows
+    const criteriaRows = body
         .selectAll(".criteria")
       .data(criteria)
-      .enter().append("g")
+      .enter().append("div")
         .classed("criteria", true)
-        .attr("transform", d => "translate("+ margin.left + "," + y(d.name) + ")")
-        .attr("cursor", "ns-resize")
+        .style("top", d => `${y(d.name)}px`)
+        .style("left", d => `${margin.left}px`)
+        .style("height", d => `${y.bandwidth() - (2 * row.textPadding)}px`)
+        .style("width", d => `${row.criteriaWidth}px`)
+        .style("padding", d => `${row.textPadding}px`)
         .call(d3.drag()
           .on("start", (d) => d3.select(d3.event.sourceEvent.target.parentElement).raise())
           .on("drag", function (d) {       
@@ -189,11 +228,12 @@ Promise
             
             // move the rows and the y axis to match
             criteriaRows
-              .attr("transform", d => "translate("+ margin.left + "," + yPosition(d) + ")")
-            gy.call(yAxis, y)
+              .style("top", d => `${yPosition(d)}px`);
+            yTicks
+              .style("top", d => `${yPosition(d)}px`);
             // move the inputs too
             criteriaWeights
-              .style("top", d => `${yPosition(d)}px`)
+              .style("top", d => `${yPosition(d)}px`);
             impactInputsGroup
               .style("top", d => `${yPosition(d)}px`);
           })
@@ -201,46 +241,30 @@ Promise
             // snap the group to their y position
             d3.select(this)
               .transition().duration(500)
-                .attr("transform", d => "translate("+ margin.left + "," + y(d.name) + ")")
+                .style("top", d => `${y(d.name)}px`);
+            yTicks
+              .transition().duration(500)
+                .style("top", d => `${y(d.name)}px`);
             criteriaWeights
               .transition().duration(500)
-                .style("top", d => `${y(d.name)}px`)
+                .style("top", d => `${y(d.name)}px`);
             impactInputsGroup
               .transition().duration(500)
                 .style("top", d => `${y(d.name)}px`);
           })
          );
-      
-    // Criteria bars
-    const criteriaBars = criteriaRows
-      .append("rect")
-        .classed("criteria-bar", true)
-        .attr("fill", "lightgray")
-        .attr("width", criteriaWidth)
-        .attr("height", y.bandwidth());
 
-    // Criteria labels
+    //Criteria labels
     const criteriaLabels = criteriaRows
-      .append("text")
-        .attr("fill", "black")
-        .attr("text-anchor", "start")
-        .style("font", "12px sans-serif")
-        .attr("x", 4)
-        .attr("y", y.bandwidth() / 2)
-        .attr("dy", "0.35em")
+      .append("p")
+        .classed("criteria-description", true)
         .text(d => d.desc);
 
-    // Axes
-    const gx = svg.append("g")
-        .call(xAxis, x, alternativeRank);
-    gx.selectAll("text")
-      .style("font", "14px sans-serif")
-      .attr("dy", -4);
-
-    const gy = svg.append("g")
-        .call(yAxis, y);
-
     // Legend
+    const svg = body.append("svg:svg")
+        .attr("width", legend.width)
+        .attr("height", legend.height + legend.marginTop)
+        .style("float", "right");
     const legendGroup = svg.append("g")
     const legendRange = legendGroup
       .selectAll(".legend")
@@ -257,17 +281,17 @@ Promise
         .attr("text-anchor", "start")
         .attr("alignment-baseline", "hanging")
         .style("font", "12px sans-serif")
-        .attr("x", width - legend.width)
+        .attr("x", 0)
         .attr("y", legend.marginTop / 2)
         .attr("dy", "0.35em")
-        .text("Greater benefit")
+        .text("Greater improvement")
     const legendMoreImpact = legendGroup
       .append("text")
         .attr("fill", "black")
         .attr("text-anchor", "end")
         .attr("alignment-baseline", "hanging")
         .style("font", "12px sans-serif")
-        .attr("x", width)
+        .attr("x", legend.width)
         .attr("y", legend.marginTop / 2)
         .attr("dy", "0.35em")
         .text("More impact")

@@ -1,12 +1,15 @@
-import { margin } from "./constants.js";
+import { margin, row } from "./constants.js";
 
 // Mutates columns
-function updateColumnOrder(impactInputs, gx, x, xAxis, alternativeRank) {
+function updateColumnOrder(impactInputs, xTicks, x, xAlternativeValue, alternativeRank) {
   impactInputs
     .transition().duration(500)
       .style("left", d => `${x(d.name) + margin.left}px`);
-  gx.transition().duration(500)
-    .call(xAxis, x, alternativeRank);
+  xTicks
+    .transition().duration(500)
+      .style("left", d => `${x(d[0]) + margin.left}px`);
+  xAlternativeValue
+    .text(d => alternativeRank[d[0]]);
 }
 
 // Mutates alternativeRank
@@ -28,7 +31,7 @@ function getAlternativesRanking(criteria) {
 
 // Returns height
 function getHeight(criteria) {
-  return criteria.length * 40 + margin.top + margin.bottom;
+  return criteria.length * row.height + margin.top + margin.bottom;
 }
 
 export { getAlternativesRanking, getHeight, reRankAlternatives, updateColumnOrder };

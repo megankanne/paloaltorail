@@ -1,61 +1,106 @@
-.observablehq {
-	position: relative;
-}
-
 body {
-	margin: 0 15%;
-	font-family: "Iowan Old Style","Apple Garamond",Baskerville,"Palatino Linotype","Times New Roman","Droid Serif",Times,"Source Serif Pro",serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  margin: 0 15%;
+  font-family: "Iowan Old Style","Apple Garamond",Baskerville,"Palatino Linotype","Times New Roman","Droid Serif",Times,"Source Serif Pro",serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
 
 h1 {
-	color: #333;
-	font-family: -apple-system,BlinkMacSystemFont,"avenir next",avenir,helvetica,"helvetica neue",ubuntu,roboto,noto,"segoe ui",arial,sans-serif;
+  color: #333;
+  font-family: -apple-system,BlinkMacSystemFont,"avenir next",avenir,helvetica,"helvetica neue",ubuntu,roboto,noto,"segoe ui",arial,sans-serif;
+}
+
+p {
+  font: 12px sans-serif;
 }
 
 .visualization { 
-	position: relative;
+  position: relative;
 }
 
-.domain { display: none }
+.x-axis {
+  display: flex;
+  position: absolute;
+  align-items: flex-end;
+}
+
+.x-tick {
+  position: absolute;
+  text-align: center;
+}
+
+.y-axis {}
+
+.y-tick {
+  position: absolute;
+}
+
+.alternative-values-row {
+  position: relative;
+}
+
+.alternative-value {
+  position: absolute;
+}
   
 input[type=number] { 
-	-webkit-appearance: textfield; 
-	-moz-appearance: textfield; 
-	appearance: textfield;
+  -webkit-appearance: textfield; 
+  -moz-appearance: textfield; 
+  appearance: textfield;
 }
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { 
-	-webkit-appearance: none; 
+  -webkit-appearance: none; 
+}
+
+.alternative-impact-group {
+  position: absolute;
 }
   
 .alternative-impact-div { 
-	position: absolute;
-	display: flex;
+  position: absolute;
+  display: flex;
 }
 .alternative-impact-div * {
-	box-sizing: border-box; 
-	border: none; 
+  box-sizing: border-box; 
+  border: none; 
 }
 .alternative-impact-div input:focus { 
-	outline: none; 
+  outline: none; 
 }
 .alternative-impact-button { 
-	font: 20px sans-serif; 
+  font: 20px sans-serif;
+  padding: 0;
 }
 .alternative-impact { 
-	text-align: center; 
+  text-align: center; 
+}
+
+.criteria {
+  position: absolute;
+  cursor: ns-resize;
+  background-color: lightgray;
+  display: flex;
+  align-items: center;
+}
+
+.criteria-description {
+  margin: 0;
 }
   
 .criteria-weight { 
-	position: absolute; 
+  position: absolute; 
 }
 .criteria-weight * { 
-	box-sizing: border-box; 
-	border: 1px lightgray solid; 
-	background-color: #F8F8F8; 
+  box-sizing: border-box; 
+  border: 1px lightgray solid; 
+  background-color: #F8F8F8; 
 }
 .criteria-weight input:focus { 
-	outline: none; 
+  outline: none; 
 }
 .criteria-weight-input { 
-	text-align: center; 
+  text-align: center; 
+}
+
+.footnote {
+  font-size: 0.75em;
+  font-style: italic;
 }
